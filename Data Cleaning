@@ -1,0 +1,44 @@
+DATA CLEANING
+1. Rename columns so that the tiltle will make sense to reader or anyone coming after you to use the data.
+
+x <- x%>%
+rename(Year=yy, Date=dat, Trip_ID=trip, Effort_Hours=effort, Gear=gr, Species=sp, Length_cm=l_cm, weight_g=w_cm)
+
+2. Convert date formart that R translator will understand
+x$Date <- mdy(x$Date)
+
+3. search for missing data 
+[!complete.cases(x)]
+
+4. remove rows missing data
+x <- na.omit(x)
+
+5. check for Typos in all strings columns
+unique(x$Gear)
+
+if multiple same text indentify covert to lower or upper case
+x$Gear <- tolower(x$Gear)
+
+6. checking for typos, for species, we should have one type of species but we found two,
+
+let's check how many rows affected
+x %>%
+  filter(Species == "Caesoi cunning") %>%
+  nrow()
+
+  let's replace 'Caesoi cunning' with 'Caesio cuning'
+  mutate(Species = replace(Species,Species == "Caesoi cunning", "Caesio cuning"))
+
+  7. check for Typos in all numeric columns
+  Summary(x$Length_cm)
+  summary(x)
+  plot(x$Length_cm)
+
+  8. remove outliers
+  x <- x %>%
+  filter(Length_cm < 100)
+
+  Repeat for all numeric columns
+
+  10. write your clean data to a folder
+  write.csv(x, file='data_clean.csv')
